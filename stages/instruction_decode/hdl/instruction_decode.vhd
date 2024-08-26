@@ -2,7 +2,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity instruction_decode is
+library instruction_decode;
+
+entity instruction_decode_stage is
     port(
         clk             : in std_logic;
         instruction     : in std_logic_vector(31 downto 0);
@@ -21,12 +23,12 @@ entity instruction_decode is
         rd_dest         : out std_logic_vector(4 downto 0);
         imm_out         : out std_logic_vector(31 downto 0)
     );  
-end instruction_decode;
+end instruction_decode_stage;
 
-architecture behavioral of instruction_decode is
+architecture behavioral of instruction_decode_stage is
 
 begin
-    control_unit_inst : entity instruction_decode_stage.control_unit
+    control_unit_inst : entity instruction_decode.control_unit
         port map(
             op_code => instruction(31 downto 26),
             funct => instruction(5 downto 0),
@@ -38,7 +40,7 @@ begin
             reg_dest => reg_dest
         );
 
-    register_file_inst : entity instruction_decode_stage.register_file
+    register_file_inst : entity instruction_decode.register_file
         generic map(
             BIT_DEPTH => 32,
             LOG_PORT_DEPTH => 5

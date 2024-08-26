@@ -1,6 +1,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
+library memory;
+
 entity memory_stage is
     generic(
         WIDTH               : natural := 32;
@@ -24,7 +26,7 @@ end memory_stage;
 
 architecture behavioral of memory_stage is
 begin
-    mem_inst : entity memory_stage.data_memory
+    mem_inst : entity memory.data_memory
         generic map(
             WIDTH => WIDTH,
             ADDR_SPACE => ADDR_SPACE

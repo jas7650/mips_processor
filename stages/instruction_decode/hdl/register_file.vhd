@@ -14,7 +14,7 @@ entity register_file is
         addr2           : in std_logic_vector(LOG_PORT_DEPTH-1 downto 0); --Addresses of registers to read from
         addr3           : in std_logic_vector(LOG_PORT_DEPTH-1 downto 0); --Addresses of registers to read from
         write_data      : in std_logic_vector(BIT_DEPTH-1 downto 0); --Data to be written to destination register
-        rd1             : out std_logic_vector(BIT_DEPTH-1 downto 0) --Parallel outputs containing the data from the selected registers
+        rd1             : out std_logic_vector(BIT_DEPTH-1 downto 0); --Parallel outputs containing the data from the selected registers
         rd2             : out std_logic_vector(BIT_DEPTH-1 downto 0) --Parallel outputs containing the data from the selected registers
     );
 end register_file;

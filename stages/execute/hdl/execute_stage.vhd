@@ -1,6 +1,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
+library execute;
+
 entity execute_stage is
     port(
         reg_write       : in std_logic;
@@ -27,7 +29,7 @@ architecture behavioral of execute_stage is
 
     signal b_source_temp : std_logic_vector(31 downto 0);
 begin
-    alu_inst : entity execute_stage.arithmetic_logic_unit
+    alu_inst : entity execute.arithmetic_logic_unit
         generic map(NUM_BITS => 32)
         port map(
             a_value => reg_source_a,

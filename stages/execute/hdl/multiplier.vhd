@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library execute;
 
 entity multiplier is
     generic(
@@ -27,7 +28,7 @@ begin
     end generate;
     
     accumulate: for i in 0 to (NUM_BITS/2)-1 generate
-        adder_inst : entity execute_stage.ripple_carry_full_adder
+        adder_inst : entity execute.ripple_carry_full_adder
             port map(
                 a_value => products(i),
                 b_value => sum(i),

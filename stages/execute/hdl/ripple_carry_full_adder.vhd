@@ -1,6 +1,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
+library execute;
+
 entity ripple_carry_full_adder is
     generic(
         NUM_BITS            : natural := 32
@@ -18,7 +20,7 @@ entity ripple_carry_full_adder is
      signal c_outs : std_logic_vector(NUM_BITS-1 downto 0);
      signal b_temp : std_logic_Vector(NUM_BITS-1 downto 0);
  begin
-    full_adder_one: entity execute_stage.full_adder 
+    full_adder_one: entity execute.full_adder
         port map(
             a_value => a_value(0), 
             b_value => b_temp(0), 
@@ -27,7 +29,7 @@ entity ripple_carry_full_adder is
             c_out => c_outs(0)
         );
     generate_full_adders: for i in 1 to NUM_BITS-1 generate
-        full_adder: entity execute_stage.full_adder 
+        full_adder: entity execute.full_adder
             port map(
                 a_value => a_value(i), 
                 b_value => b_temp(i), 
@@ -38,7 +40,7 @@ entity ripple_carry_full_adder is
     end generate;
     
     generate_xors: for i in 0 to NUM_BITS-1 generate
-        xors: entity execute_stage.TwoInputXor
+        xors: entity execute.TwoInputXor
             port map(
                 a_value => b_value(i),
                 b_value => op_code,

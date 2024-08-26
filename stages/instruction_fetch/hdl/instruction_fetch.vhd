@@ -2,19 +2,21 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity instruction_fetch is
+library instruction_fetch;
+
+entity instruction_fetch_stage is
     port(
         clk             : in std_logic;
         rst             : in std_logic;
         instruction     : out std_logic_vector(31 downto 0)
     );
-end instruction_fetch;
+end instruction_fetch_stage;
 
-architecture behavioral of instruction_fetch is
+architecture behavioral of instruction_fetch_stage is
     signal pc : std_logic_vector(27 downto 0) := (others => '0');
 begin
 
-    instruction_memory_inst : entity instruction_fetch_stage.instruction_memory
+    instruction_memory_inst : entity instruction_fetch.instruction_memory
         generic map(MEM_SIZE => 2048)
         port map(
             addr => pc,

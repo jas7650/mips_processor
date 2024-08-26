@@ -1,5 +1,10 @@
 library ieee;
 use ieee.std_logic_1164.all;
+library execute;
+library instruction_decode;
+library instruction_fetch;
+library memory;
+library writeback;
 
 entity mips is 
     port(
@@ -20,74 +25,74 @@ end mips;
 architecture behavioral of mips is 
 
     type fetch_stage_type is record
-        clk                 : in std_logic;
-        rst                 : in std_logic;
-        instruction         : out std_logic_vector(31 downto 0);
+        clk                 : std_logic;
+        rst                 : std_logic;
+        instruction         : std_logic_vector(31 downto 0);
     end record fetch_stage_type;
 
     type decode_stage_type is record
-        clk                 : in std_logic;
-        instruction         : in std_logic_vector(31 downto 0);
-        reg_write_addr      : in std_logic_vector(4 downto 0);
-        reg_write_data      : in std_logic_vector(31 downto 0);
-        reg_write_en        : in std_logic;
-        reg_write           : out std_logic;
-        mem_to_reg          : out std_logic;
-        mem_write           : out std_logic;
-        alu_control         : out std_logic_vector(3 downto 0);
-        alu_source          : out std_logic;
-        reg_dest            : out std_logic;
-        rd1                 : out std_logic_vector(31 downto 0);
-        rd2                 : out std_logic_vector(31 downto 0);
-        rt_dest             : out std_logic_vector(4 downto 0); 
-        rd_dest             : out std_logic_vector(4 downto 0);
-        imm_out             : out std_logic_vector(31 downto 0);
+        clk                 : std_logic;
+        instruction         : std_logic_vector(31 downto 0);
+        reg_write_addr      : std_logic_vector(4 downto 0);
+        reg_write_data      : std_logic_vector(31 downto 0);
+        reg_write_en        : std_logic;
+        reg_write           : std_logic;
+        mem_to_reg          : std_logic;
+        mem_write           : std_logic;
+        alu_control         : std_logic_vector(3 downto 0);
+        alu_source          : std_logic;
+        reg_dest            : std_logic;
+        rd1                 : std_logic_vector(31 downto 0);
+        rd2                 : std_logic_vector(31 downto 0);
+        rt_dest             : std_logic_vector(4 downto 0);
+        rd_dest             : std_logic_vector(4 downto 0);
+        imm_out             : std_logic_vector(31 downto 0);
     end record decode_stage_type;
 
     type execute_stage_type is record
-        reg_write           : in std_logic;
-        mem_to_reg          : in std_logic;
-        mem_write           : in std_logic;
-        alu_source          : in std_logic;
-        reg_dest            : in std_logic;
-        alu_control         : in std_logic_vector(3 downto 0);
-        reg_source_a        : in std_logic_vector(31 downto 0);
-        reg_source_b        : in std_logic_vector(31 downto 0);
-        rt_dest             : in std_logic_vector(4 downto 0);
-        rd_dest             : in std_logic_vector(4 downto 0);
-        sign_imm            : in std_logic_vector(31 downto 0);
-        reg_write_out       : out std_logic;
-        mem_to_reg_out      : out std_logic;
-        mem_write_out       : out std_logic;
-        alu_result          : out std_logic_vector(31 downto 0); 
-        write_data          : out std_logic_vector(31 downto 0);
-        write_reg           : out std_logic_vector(4 downto 0);
+        reg_write           : std_logic;
+        mem_to_reg          : std_logic;
+        mem_write           : std_logic;
+        alu_source          : std_logic;
+        reg_dest            : std_logic;
+        alu_control         : std_logic_vector(3 downto 0);
+        reg_source_a        : std_logic_vector(31 downto 0);
+        reg_source_b        : std_logic_vector(31 downto 0);
+        rt_dest             : std_logic_vector(4 downto 0);
+        rd_dest             : std_logic_vector(4 downto 0);
+        sign_imm            : std_logic_vector(31 downto 0);
+        reg_write_out       : std_logic;
+        mem_to_reg_out      : std_logic;
+        mem_write_out       : std_logic;
+        alu_result          : std_logic_vector(31 downto 0);
+        write_data          : std_logic_vector(31 downto 0);
+        write_reg           : std_logic_vector(4 downto 0);
     end record execute_stage_type;
 
     type memory_stage_type is record
-        clk                 : in std_logic;
-        reg_write           : in std_logic;
-        mem_to_reg          : in std_logic;
-        mem_write           : in std_logic;
-        write_reg           : in std_logic_vector(4 downto 0);
-        alu_result          : in std_logic_vector(31 downto 0);
-        write_data          : in std_logic_vector(31 downto 0);
-        reg_write_out       : out std_logic;
-        mem_to_reg_out      : out std_logic;
-        write_reg_out       : out std_logic_vector(4 downto 0);
-        mem_out             : out std_logic_vector(31 downto 0);
-        alu_result_out      : out std_logic_vector(31 downto 0);
+        clk                 : std_logic;
+        reg_write           : std_logic;
+        mem_to_reg          : std_logic;
+        mem_write           : std_logic;
+        write_reg           : std_logic_vector(4 downto 0);
+        alu_result          : std_logic_vector(31 downto 0);
+        write_data          : std_logic_vector(31 downto 0);
+        reg_write_out       : std_logic;
+        mem_to_reg_out      : std_logic;
+        write_reg_out       : std_logic_vector(4 downto 0);
+        mem_out             : std_logic_vector(31 downto 0);
+        alu_result_out      : std_logic_vector(31 downto 0);
     end record memory_stage_type;
 
     type writeback_stage_type is record
-        reg_write       : in std_logic; 
-        mem_to_reg      : in std_logic;
-        alu_result      : in std_logic_vector(31 downto 0);
-        read_data       : in std_logic_vector(31 downto 0);
-        write_reg       : in std_logic_vector(4 downto 0);
-        reg_write_out   : out std_logic;
-        write_reg_out   : out std_logic_vector(4 downto 0);
-        result          : out std_logic_vector(31 downto 0);
+        reg_write       : std_logic;
+        mem_to_reg      : std_logic;
+        alu_result      : std_logic_vector(31 downto 0);
+        read_data       : std_logic_vector(31 downto 0);
+        write_reg       : std_logic_vector(4 downto 0);
+        reg_write_out   : std_logic;
+        write_reg_out   : std_logic_vector(4 downto 0);
+        result          : std_logic_vector(31 downto 0);
     end record writeback_stage_type;
 
     signal fetch_stage : fetch_stage_type;
@@ -127,7 +132,7 @@ architecture behavioral of mips is
     signal ReadDataInW : std_logic_vector(31 downto 0) := x"00000000";
 begin
 
-    instruction_fetch_inst : entity instruction_fetch_stage.instruction_fetch
+    instruction_fetch_inst : entity instruction_fetch.instruction_fetch_stage
         port map(
             clk => clk,
             rst => reset,
@@ -140,7 +145,7 @@ begin
         end if;
     end process;
 
-    instruction_decode_inst : entity instruction_decode_stage.instruction_decode
+    instruction_decode_inst : entity instruction_decode.instruction_decode_stage
         port map(
             clk => clk,
             instruction => InstructionInD,
@@ -176,7 +181,7 @@ begin
         end if;
     end process;
 
-    execute_inst : entity execute_stage.execute_stage
+    execute_inst : entity execute.execute_stage
         port map(
             reg_write => RegWriteInE,
             mem_to_reg => MemtoRegInE,
@@ -208,7 +213,7 @@ begin
         end if;
     end process;
 
-    memory_stage_inst : entity memory_stage.memory_stage
+    memory_stage_inst : entity memory.memory_stage
         port map(
             clk => clk,
             reg_write => RegWriteInM,
@@ -234,7 +239,7 @@ begin
         end if;
     end process;
 
-    writeback_stage_inst : entity writeback_stage.writeback_stage
+    writeback_stage_inst : entity writeback.writeback_stage
         port map(
             reg_write => RegWriteInW,
             mem_to_reg => MemtoRegInW,

@@ -2,6 +2,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library execute;
+
 entity arithmetic_logic_unit is
     generic (
         NUM_BITS    : natural := 32
@@ -27,27 +29,27 @@ architecture structural of arithmetic_logic_unit is
     signal mult_result : std_logic_vector(NUM_BITS-1 downto 0);
 
 begin
-    sll_comp: entity execute_stage.logic_shift_left_unit
+    sll_comp: entity execute.logic_shift_left_unit
         generic map (NUM_BITS => NUM_BITS)
         port map (a_value => a_value, shift_amount => b_value, y_value => sll_result);
 
-    srl_comp: entity execute_stage.logic_shift_right_unit
+    srl_comp: entity execute.logic_shift_right_unit
         generic map (NUM_BITS => NUM_BITS)
         port map (a_value => a_value, shift_amount => b_value, y_value => srl_result);
 
-    sra_comp: entity execute_stage.arithmetic_shift_right_unit
+    sra_comp: entity execute.arithmetic_shift_right_unit
         generic map (NUM_BITS => NUM_BITS)
         port map (a_value => a_value, shift_amount => b_value, y_value => sra_result);
 
-    add_comp: entity execute_stage.ripple_carry_full_adder
+    add_comp: entity execute.ripple_carry_full_adder
         generic map(NUM_BITS => NUM_BITS)
         port map (a_value => a_value, b_value => b_value, op_code => '0', sum => add_result);
 
-    sub_comp: entity execute_stage.ripple_carry_full_adder
+    sub_comp: entity execute.ripple_carry_full_adder
         generic map(NUM_BITS => NUM_BITS)
         port map (a_value => a_value, b_value => b_value, op_code => '1', sum => sub_result);
 
-    mult_comp : entity execute_stage.multiplier
+    mult_comp : entity execute.multiplier
         generic map(NUM_BITS => NUM_BITS)
         port map (a_value => a_value(15 downto 0), b_value => b_value(15 downto 0), product => mult_result);
 
